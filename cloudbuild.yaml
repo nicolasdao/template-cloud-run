@@ -1,0 +1,32 @@
+substitutions:
+  _REGION: australia-southeast1
+  _SERVICE_IMG: gcr.io/${PROJECT_ID}/${REPO_NAME}:${SHORT_SHA}
+steps:
+## UNCOMMENT THE FOLLOWING IF YOU WISH TO USE SECRETS FROM CLOUD SECRET MANAGER
+# # Get the GitHub personal token so that private packages can be installed.
+# - name: gcr.io/cloud-builders/gcloud
+#   entrypoint: 'bash'
+#   args: [ '-c', "gcloud secrets versions access latest --secret=GITHUB_PERSONAL_ACCESS_TOKEN > GITHUB_PERSONAL_ACCESS_TOKEN.txt" ]
+# # Get the environment variables with the secrets
+# - name: gcr.io/cloud-builders/gcloud
+#   entrypoint: 'bash'
+#   args: [ '-c', "gcloud secrets versions access latest --secret=your-secrets-${BRANCH_NAME} > .env" ]
+# # Create the Docker image passing down the GITHUB_PERSONAL_ACCESS_TOKEN to pull private packages fro GitHub
+# - name: 'gcr.io/cloud-builders/docker'
+#   entrypoint: 'bash'
+#   args: ['-c', 'docker build --build-arg GITHUB_PERSONAL_ACCESS_TOKEN="$(cat GITHUB_PERSONAL_ACCESS_TOKEN.txt)" -t $_SERVICE_IMG .']
+# Create the Docker image passing down the GITHUB_PERSONAL_ACCESS_TOKEN to pull private packages fro GitHub
+- name: 'gcr.io/cloud-builders/docker'
+  entrypoint: 'bash'
+  args: ['-c', 'docker build -t $_SERVICE_IMG .']
+# Push the container image to Container Registry
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', '$_SERVICE_IMG']
+# Deploy container image to Cloud Run
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: gcloud
+  args: ['run', 'deploy', '${REPO_NAME}', '--image', '$_SERVICE_IMG', '--region', '$_REGION', '--platform', 'managed']
+options:
+  dynamic_substitutions: true
+images:
+- '$_SERVICE_IMG'
