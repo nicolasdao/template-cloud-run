@@ -25,7 +25,7 @@ steps:
 # Deploy container image to Cloud Run
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: gcloud
-  args: ['run', 'deploy', '${REPO_NAME}', '--image', '$_SERVICE_IMG', '--region', '$_REGION', '--platform', 'managed']
+  args: ['run', 'deploy', '${REPO_NAME}-${BRANCH_NAME}', '--image', '$_SERVICE_IMG', '--region', '$_REGION', '--platform', 'managed']
 options:
   dynamic_substitutions: true
 images:
