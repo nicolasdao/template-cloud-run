@@ -18,3 +18,14 @@ What's left to be configured are:
 	- Deploy to Cloud Run.
 	- Access Secret Manager (optional).
 - Add a new GitHub trigger in Cloud Build so that pushes to certain branches or tags trigger a new deployment.
+
+# Project conventions
+
+The `cloudbuild.yaml` leverages `${PROJECT_ID}` combined with the following substitution variables that are accessible when GitHub push is configured to trigger Cloud Build:
+- `${REPO_NAME}`
+- `${SHORT_SHA}`
+- `${BRANCH_NAME}`
+
+Those variables are used to name the Docker image as well as the deployed service as follow:
+- Cloud Run service name: `${REPO_NAME}-${BRANCH_NAME}` (e.g., prod should be `my-super-service-master` and test should be `my-super-service-test`).
+- Container Registry Docker image: `gcr.io/${PROJECT_ID}/${REPO_NAME}:${SHORT_SHA}` (e.g., `gcr.io/my-super-project/my-super-service@sha256:3eda852`).
