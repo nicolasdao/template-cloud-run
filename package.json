@@ -11,8 +11,11 @@
     "url": "https://github.com/nicolasdao/template-cloud-run/issues"
   },
   "homepage": "https://github.com/nicolasdao/template-cloud-run#readme",
+  "config": {
+    "devport": 5000
+  },
   "scripts": {
-    "dev": "TZ=UTC NODE_ENV=dev PORT=5000 node-dev -r dotenv/config index.js",
+    "dev": "TZ=UTC NODE_ENV=dev PORT=$npm_package_config_devport node-dev -r dotenv/config index.js",
     "lint": "eslint index.js src/ test/ --fix",
     "push": "git push --follow-tags origin master",
     "rls": "standard-version --release-as",
