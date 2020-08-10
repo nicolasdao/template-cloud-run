@@ -1,3 +1,9 @@
+```
+git clone https://github.com/nicolasdao/template-cloud-run.git yourprojectname
+cd yourprojectname
+npm i
+```
+
 # About this template
 
 This template is preconfigured with the following config files so it's ready to be deployed to Google Cloud Run via a GitHub trigger:
